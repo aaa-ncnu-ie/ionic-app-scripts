@@ -79,7 +79,8 @@ export function getFileNames(context: BuildContext, program: Program): string[] 
  */
 export function getTsLintConfig(tsLintConfig: string, linterOptions?: LinterOptions): LinterConfig {
   const config = Configuration.loadConfigurationFromPath(tsLintConfig);
-  Object.assign(config, isObject(linterOptions) ? {linterOptions} : {});
+  const mergedLinterOptions = Object.assign({}, config.linterOptions, linterOptions);
+  Object.assign(config, { linterOptions: mergedLinterOptions });
   return config;
 }
 
