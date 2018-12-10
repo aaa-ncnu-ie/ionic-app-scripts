@@ -1,6 +1,8 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import { Linter, LintResult, RuleFailure } from 'tslint';
 import { Diagnostic, Program } from 'typescript';
+import { Minimatch } from 'minimatch';
 import { BuildError } from '../util/errors';
 import {
   createLinter,
@@ -43,6 +45,20 @@ export function lintFile(linter: Linter, config: any, filePath: string): Promise
   if (isMpegFile(filePath)) {
     return Promise.reject(`${filePath} is not a valid TypeScript file`);
   }
+
+  // TODO: remove this temporary fix when proper exclusion gets merged to tslint NPM package
+  if (isFileExcluded(filePath)) {
+    return Promise.resolve();
+  }
+
+  function isFileExcluded(filepath: string) {
+      if (config === undefined || config.linterOptions === undefined || config.linterOptions.exclude === undefined) {
+          return false;
+      }
+      const fullPath = path.resolve(filepath);
+      return config.linterOptions.exclude.some((pattern: string) => new Minimatch(pattern).match(fullPath));
+  }
+
   return readFileAsync(filePath)
     .then((fileContents: string) => lint(linter, config, filePath, fileContents));
 }
