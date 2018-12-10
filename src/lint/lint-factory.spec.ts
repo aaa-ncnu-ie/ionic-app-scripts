@@ -86,6 +86,22 @@ describe('lint factory', () => {
         exclude: ['src/test.ts']
       });
     });
+
+    it('should overwrite {linterOptions} provided in config with {linterOptions} parameter', () => {
+      const tsLintConfigFilePath = 'tslint.json';
+      const mockConfig = {rulesDirectory: ['node_modules/@ionic'], linterOptions: {exclude: ['src/test.ts'], typeCheck: false}};
+      spyOn(Configuration, Configuration.loadConfigurationFromPath.name).and.returnValue(mockConfig);
+      const config = getTsLintConfig(tsLintConfigFilePath, {
+        typeCheck: true
+      });
+
+      console.log(config);
+
+      expect(config.linterOptions).toEqual({
+        typeCheck: true,
+        exclude: ['src/test.ts']
+      });
+    });
   });
 
   describe('createLinter()', () => {
