@@ -51,8 +51,6 @@ describe('lint factory', () => {
         typeCheck: true
       });
 
-      console.log(config);
-
       expect(config.linterOptions).toEqual({
         typeCheck: true
       });
@@ -63,8 +61,6 @@ describe('lint factory', () => {
       const mockConfig = {rulesDirectory: ['node_modules/@ionic'], linterOptions: {exclude: ['src/test.ts']}};
       spyOn(Configuration, Configuration.loadConfigurationFromPath.name).and.returnValue(mockConfig);
       const config = getTsLintConfig(tsLintConfigFilePath);
-
-      console.log(config);
 
       expect(config.linterOptions).toEqual({
         exclude: ['src/test.ts']
@@ -79,8 +75,6 @@ describe('lint factory', () => {
         typeCheck: true
       });
 
-      console.log(config);
-
       expect(config.linterOptions).toEqual({
         typeCheck: true,
         exclude: ['src/test.ts']
@@ -94,8 +88,6 @@ describe('lint factory', () => {
       const config = getTsLintConfig(tsLintConfigFilePath, {
         typeCheck: true
       });
-
-      console.log(config);
 
       expect(config.linterOptions).toEqual({
         typeCheck: true,
