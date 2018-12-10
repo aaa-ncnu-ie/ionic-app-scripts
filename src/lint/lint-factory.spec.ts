@@ -32,7 +32,7 @@ describe('lint factory', () => {
 
   describe('getTsLintConfig()', () => {
     it('should fetch the TSLint configuration from file path', () => {
-      const tsConfigFilePath = 'tsconfig.json';
+      const tsConfigFilePath = 'tslint.json';
       const mockConfig = {rulesDirectory: ['node_modules/@ionic']};
       spyOn(Configuration, Configuration.loadConfigurationFromPath.name).and.returnValue(mockConfig);
 
@@ -44,15 +44,33 @@ describe('lint factory', () => {
     });
 
     it('should extend configuration with {linterOptions} if provided', () => {
-      const tsConfigFilePath = 'tsconfig.json';
+      const tsLintConfigFilePath = 'tslint.json';
       const mockConfig = {rulesDirectory: ['node_modules/@ionic']};
       spyOn(Configuration, Configuration.loadConfigurationFromPath.name).and.returnValue(mockConfig);
-      const config = getTsLintConfig(tsConfigFilePath, {
+      const config = getTsLintConfig(tsLintConfigFilePath, {
         typeCheck: true
       });
 
+      console.log(config);
+
       expect(config.linterOptions).toEqual({
         typeCheck: true
+      });
+    });
+
+    it('should merge {linterOptions} properly', () => {
+      const tsLintConfigFilePath = 'tslint.json';
+      const mockConfig = {rulesDirectory: ['node_modules/@ionic'], linterOptions: {exclude: ['src/test.ts']}};
+      spyOn(Configuration, Configuration.loadConfigurationFromPath.name).and.returnValue(mockConfig);
+      const config = getTsLintConfig(tsLintConfigFilePath, {
+        typeCheck: true
+      });
+
+      console.log(config);
+
+      expect(config.linterOptions).toEqual({
+        typeCheck: true,
+        exclude: ['src/test.ts']
       });
     });
   });
